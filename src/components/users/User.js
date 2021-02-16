@@ -1,22 +1,18 @@
-import React, { Component, Fragment } from 'react'
+import React, { useEffect, Fragment } from 'react'
 import Spinner from '../layout/Spinner'
+import Repos  from '../repos/Repos'
 import { Link } from 'react-router-dom'
 import PropTypes from 'prop-types'
 
 
-export class User extends Component {
-    componentDidMount() {
-        this.props.getUser(this.props.match.params.login);
-    }
-static propTypes = {
-    loading: PropTypes.bool,
-    user: PropTypes.object.isRequired,
-    getUser: PropTypes.func.isRequired
-}
+const User = ({ user, loading, getUser, getUserRepos, repos, match}) => {
+    useEffect(() => {
+        getUser(match.params.login);
+        getUserRepos(match.params.login);
+        // eslint-disable-next-line
+    }, []);
 
-
-    render() {
-        const {
+    const {
             name,
             avatar_url,
             location,
@@ -30,10 +26,8 @@ static propTypes = {
             public_repos,
             public_gists,
             hirable
-        } = this.props.user;
-
-        const { loading} = this.props;
-
+        } = user;
+        
         if(loading) return <Spinner />;
         
         return (
@@ -82,11 +76,24 @@ static propTypes = {
                         </ul>
                     </div>
                 </div>
-                    
+                <div className='card text-center'>
+                    <div className='badge badge-primary'>Followers: {followers}</div>
+                    <div className='badge badge-success'>Following: {following}</div>
+                    <div className='badge badge-light'>Public Repos: {public_repos}</div>
+                    <div className='badge badge-dark'>Public Gists: {public_gists}</div>
+                </div>
+                <Repos repos= {repos} />    
             </Fragment>
-        )
-    }
+        );
 }
+User.propTypes = {
+    loading: PropTypes.bool,
+    user: PropTypes.object.isRequired,
+    repos: PropTypes.array.isRequired,
+    getUser: PropTypes.func.isRequired,
+    getUserRepos: PropTypes.func.isRequired
+}
+
 
 export default User
 
