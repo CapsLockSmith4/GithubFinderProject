@@ -1,15 +1,19 @@
-import React from 'react'
+import React, {useContext} from 'react';
 import UserItem from './UserItem';
 import Spinner from '../layout/Spinner';
+import GithubContext from '../../context/github/githubContext';
 
-const Users = ({users, id, loading}) => {
+
+const Users = () => {
+    const githubContext = useContext(GithubContext);
+    const {loading, users} = githubContext;
     if(loading) {
         return <Spinner />
     } else {
         return (
             <div className='griduserStyle'>
                 {users.map(user => (
-                    <UserItem key={id} user={user} /> 
+                    <UserItem key={user.id} user={user} /> 
                 ))} 
             </div>
             
